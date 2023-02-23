@@ -6,81 +6,77 @@ using UnityEngine.UI;
 
 public class Sequence : MonoBehaviour
 {
-    [SerializeField] KeyList keyList; //List of all assignable keys/inputs. Set in inspector.
     [SerializeField] int keyNumber; //Number of keys/inputs the enemy will have. Set in inspector.
-    int count;
     int misinput = 0;
-    [SerializeField] TextMeshProUGUI misinputText;
-    [SerializeField] List<KeyPlusSprite> enemyKeys = new(); //List of keys/inputs this enemy will require.
-    [SerializeField] Image keySprite; //Sprite to show the player which key to press.
-    bool start = true;
-    // Start is called before the first frame update
-    void Start()
-    {
-        SetKeys(keyNumber);
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            start = true;
-            SetKeys(keyNumber);
-        }
-        TakeInput();
-    }
-
-    void TakeInput() //Scrolls through the list of keys set for the enemy as the player makes the inputs.
+    public bool TakeInput(List<KeyPlusSprite> enemyKeys, Image keySprite, TextMeshProUGUI misinputText) //Scrolls through the list of keys set for the enemy as the player makes the inputs.
     {
         if (enemyKeys.Count >= 1)
         {
-            keySprite.sprite = enemyKeys[count].sprite;
+            if (!keySprite.gameObject.activeSelf)
+            {
+                keySprite.gameObject.SetActive(true);
+                misinputText.gameObject.SetActive(true);
+            }
+            keySprite.sprite = enemyKeys[enemyKeys.Count - 1].sprite;
             if (misinput == 3)
             {
-                enemyKeys.Clear();
+                //battle lost - not currently implemented
+                keySprite.sprite = null;
                 misinput = 0;
+                keySprite.gameObject.SetActive(false);
+                misinputText.gameObject.SetActive(false);
+                return false;
             }
-            if (Input.GetKeyDown(enemyKeys[count].key) && misinput < 3)
+            if (Input.GetKeyDown(enemyKeys[enemyKeys.Count - 1].key) && misinput < 3)
             {
-                enemyKeys.RemoveAt(count);
-                count--;
+                enemyKeys.RemoveAt(enemyKeys.Count - 1);
             }
             else if (Input.anyKeyDown)
             {
                 misinput++;
             }
-            misinputText.text = $"Misinput: {misinput}";
         }
-        if (count < 0)
+        misinputText.text = $"Misinput: {misinput}";
+        if (enemyKeys.Count < 1)
         {
+            //battle won
             keySprite.sprite = null;
             misinput = 0;
+            keySprite.gameObject.SetActive(false);
+            misinputText.gameObject.SetActive(false);
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 
-    void SetKeys(int numberOfKeys) //Assigns the keys the player will have to press to beat this enemy.
+    public List<KeyPlusSprite> SetKeys(KeyPlusSprite[] keyList) //Assigns the keys the player will have to press to beat this enemy.
     {
-        count = keyNumber - 1;
-        for (int i = numberOfKeys; i > 0; i--)
+        List<KeyPlusSprite> enemyKeys = new();
+        bool start = true;
+        for (int i = keyNumber; i > 0; i--)
         {
             if (start)
             {
-                int randomNumber = Random.Range(0, keyList.allKeys.Length);
-                KeyPlusSprite newKey = keyList.allKeys[randomNumber];
+                int randomNumber = Random.Range(0, keyList.Length);
+                KeyPlusSprite newKey = keyList[randomNumber];
                 enemyKeys.Add(newKey);
                 start = false;
             }
             else
             {
-                int randomNumber = Random.Range(0, keyList.allKeys.Length - 1);
-                KeyPlusSprite newKey = keyList.allKeys[randomNumber];
+                int randomNumber = Random.Range(0, keyList.Length - 1);
+                KeyPlusSprite newKey = keyList[randomNumber];
                 if (newKey == enemyKeys[enemyKeys.Count - 1])
                 {
-                    newKey = keyList.allKeys[randomNumber + 1];
+                    newKey = keyList[randomNumber + 1];
                 }
                 enemyKeys.Add(newKey);
             }
         }
+        return enemyKeys;
     }
 }
