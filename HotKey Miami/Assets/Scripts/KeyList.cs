@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class KeyList : MonoBehaviour
 {
-    public KeySprite[] allKeys;
+    public KeyPlusSprite[] allKeys;
 }
 
 [System.Serializable]
-public class KeySprite
+public class KeyPlusSprite
 {
     public Sprite sprite;
     public KeyCode key;
