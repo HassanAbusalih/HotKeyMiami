@@ -20,23 +20,19 @@ public class PlayerControls : MonoBehaviour
     {
         if (Input.GetKey(forward))
         {
-            rb.velocity += new Vector3(0, 0, speed);
-            transform.forward = rb.velocity;
+            rb.velocity += transform.forward * speed;
         }
         if (Input.GetKey(backward))
         {
-            rb.velocity += new Vector3(0, 0, -speed);
-            transform.forward = rb.velocity;
+            rb.velocity -= transform.forward * speed;
         }
         if (Input.GetKey(left))
         {
-            rb.velocity += new Vector3(-speed, 0, 0);
-            transform.forward = rb.velocity;
+            rb.velocity -= transform.right * speed;
         }
         if (Input.GetKey(right))
         {
-            rb.velocity += new Vector3(speed, 0, 0);
-            transform.forward = rb.velocity;
+            rb.velocity += transform.right * speed;
         }
         if (Input.GetKey(sprint))
         {
@@ -48,11 +44,7 @@ public class PlayerControls : MonoBehaviour
         }
         if (!Input.GetKey(forward) && !Input.GetKey(backward) && !Input.GetKey(left) && !Input.GetKey(right))
         {
-            rb.velocity *= 0.95f;
-            if (rb.velocity.magnitude < 0.5f)
-            {
-                rb.velocity = Vector3.zero;
-            }
+            rb.velocity = Vector3.zero;
         }
         if (Input.GetKey(jump))
         {
