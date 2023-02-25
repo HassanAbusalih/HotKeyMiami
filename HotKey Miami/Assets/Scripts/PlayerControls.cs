@@ -10,45 +10,49 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] KeyCode right;
     [SerializeField] KeyCode sprint;
     [SerializeField] KeyCode jump;
+    bool canJump;
     [SerializeField] float speed;
-    [SerializeField] float maxSpeed;
-    [SerializeField] float maxSprintSpeed;
-
+    [SerializeField] float sprintSpeed;
+    [SerializeField] float jumpHeight;
 
 
     public void PlayerActions(Rigidbody rb)
     {
+        if (Physics.Raycast(transform.position, -transform.up, 1.6f))
+        {
+            canJump = true;
+        }
+        Vector3 movement = new Vector3();
         if (Input.GetKey(forward))
         {
-            rb.velocity += transform.forward * speed;
+            movement += Vector3.ProjectOnPlane(transform.forward, Vector3.up);
         }
         if (Input.GetKey(backward))
         {
-            rb.velocity -= transform.forward * speed;
+            movement -= Vector3.ProjectOnPlane(transform.forward, Vector3.up);
         }
         if (Input.GetKey(left))
         {
-            rb.velocity -= transform.right * speed;
+            movement -= Vector3.ProjectOnPlane(transform.right, Vector3.up);
         }
         if (Input.GetKey(right))
         {
-            rb.velocity += transform.right * speed;
+            movement += Vector3.ProjectOnPlane(transform.right, Vector3.up);
         }
         if (Input.GetKey(sprint))
         {
-            rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSprintSpeed);
+            movement = movement.normalized * sprintSpeed;
         }
         else
         {
-            rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
+            movement = movement.normalized * speed;
         }
-        if (!Input.GetKey(forward) && !Input.GetKey(backward) && !Input.GetKey(left) && !Input.GetKey(right))
+        transform.position += new Vector3(movement.x, 0, movement.z) * Time.deltaTime;
+        rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        if (Input.GetKeyDown(jump) && canJump)
         {
-            rb.velocity = Vector3.zero;
-        }
-        if (Input.GetKey(jump))
-        {
-            //jump code here, maybe
+            rb.velocity +=  Vector3.up * jumpHeight;
+            canJump = false;
         }
     }
 }

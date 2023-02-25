@@ -7,10 +7,12 @@ using UnityEngine.UI;
 public class Sequence : MonoBehaviour
 {
     [SerializeField] int keyNumber; //Number of keys/inputs the enemy will have. Set in inspector.
+    [SerializeField] int timeReward; //Amount of time to reward player on win.
+    [SerializeField] int timePenalty; //Amount of time to penalize the player on loss. Should be a negative value or zero.
     public bool battle = false;
     int misinput = 0;
 
-    public bool TakeInput(List<KeyPlusSprite> enemyKeys, Image keySprite, TextMeshProUGUI misinputText) //Scrolls through the list of keys set for the enemy as the player makes the inputs.
+    public (bool,int) TakeInput(List<KeyPlusSprite> enemyKeys, Image keySprite, TextMeshProUGUI misinputText) //Scrolls through the list of keys set for the enemy as the player makes the inputs.
     {
         if (enemyKeys.Count >= 1)
         {
@@ -23,9 +25,9 @@ public class Sequence : MonoBehaviour
             keySprite.sprite = enemyKeys[enemyKeys.Count - 1].sprite;
             if (misinput == 3)
             {
-                //battle lost - not currently implemented
+                //battle lost
                 ResolveBattle(keySprite, misinputText);
-                return false;
+                return (false, timePenalty);
             }
             if (Input.GetKeyDown(enemyKeys[enemyKeys.Count - 1].key) && misinput < 3)
             {
@@ -41,11 +43,11 @@ public class Sequence : MonoBehaviour
         {
             //battle won
             ResolveBattle(keySprite, misinputText);
-            return false;
+            return (false, timeReward);
         }
         else
         {
-            return true;
+            return (true, 0);
         }
     }
 

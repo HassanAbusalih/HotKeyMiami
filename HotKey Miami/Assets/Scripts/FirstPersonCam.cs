@@ -7,28 +7,33 @@ public class FirstPersonCam : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] Vector3 offset;
     [SerializeField] float mouseSensitivity = 100f;
-    float xRotation = 0f;
-    float yRotation = 0f;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    float mouseX = 0f;
+    float mouseY = 0f;
 
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-
-        xRotation += mouseX;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        yRotation -= mouseY;
-
-        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        player.transform.rotation = Quaternion.Euler(yRotation, xRotation, 0f);
+        player.transform.forward = transform.forward;
+        mouseX += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        mouseY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (mouseX < 0)
+        {
+            mouseX += 360;
+        }
+        if (mouseX > 360)
+        {
+            mouseX -= 360;
+        }
+        if (mouseY < -90)
+        {
+            mouseY = -90;
+        }
+        if (mouseY > 90)
+        {
+            mouseY = 90;
+        }
+        transform.rotation = Quaternion.Euler(mouseY, mouseX, 0f);
+        player.transform.rotation = transform.rotation;
         transform.position = player.transform.position + offset;
-        transform.forward = player.transform.forward;
-        //transform.rotation = player.transform.rotation;
     }
 }

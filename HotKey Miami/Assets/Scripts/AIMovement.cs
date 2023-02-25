@@ -6,7 +6,7 @@ public class AIMovement : MonoBehaviour
 {
     [SerializeField] GameObject[] positions; // List of positions to cycle through.
     [SerializeField] float moveSpeed = 1f;
-    bool battle = true;
+    bool battle;
     bool forward = true;
     [SerializeField] int currentPos = -1;
 
