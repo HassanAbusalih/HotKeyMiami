@@ -9,6 +9,10 @@ public class Sequence : MonoBehaviour
     [SerializeField] int keyNumber; //Number of keys/inputs the enemy will have. Set in inspector.
     [SerializeField] int timeReward; //Amount of time to reward player on win.
     [SerializeField] int timePenalty; //Amount of time to penalize the player on loss. Should be a negative value or zero.
+    [SerializeField] Image inputTimeVisual;
+    [SerializeField] float timeForInput;
+    float currentInputTime;
+    bool wait;
     public bool battle = false;
     int misinput = 0;
 
@@ -16,37 +20,61 @@ public class Sequence : MonoBehaviour
     {
         if (enemyKeys.Count >= 1)
         {
+            keySprite.sprite = enemyKeys[enemyKeys.Count - 1].sprite;
             if (!keySprite.gameObject.activeSelf)
             {
                 battle = true;
                 keySprite.gameObject.SetActive(true);
                 misinputText.gameObject.SetActive(true);
+                inputTimeVisual.gameObject.SetActive(true);
+                currentInputTime = timeForInput;
             }
-            keySprite.sprite = enemyKeys[enemyKeys.Count - 1].sprite;
+            currentInputTime -= Time.deltaTime;
+            inputTimeVisual.fillAmount = currentInputTime / timeForInput;
+            if (inputTimeVisual.fillAmount > 0.7f)
+            {
+                inputTimeVisual.color = Color.green;
+            }
+            else if (inputTimeVisual.fillAmount > 0.4f)
+            {
+                inputTimeVisual.color = Color.yellow;
+            }
+            else
+            {
+                inputTimeVisual.color = Color.red;
+            }
             if (misinput == 3)
             {
-                //battle lost
+                //battle lost.
                 ResolveBattle(keySprite, misinputText);
                 return (false, timePenalty);
             }
             if (Input.GetKeyDown(enemyKeys[enemyKeys.Count - 1].key) && misinput < 3)
             {
                 enemyKeys.RemoveAt(enemyKeys.Count - 1);
+                currentInputTime = timeForInput;
             }
             else if (Input.anyKeyDown)
             {
                 misinput++;
             }
+            else if (currentInputTime < 0)
+            {
+                enemyKeys.RemoveAt(enemyKeys.Count - 1);
+                misinput++;
+                currentInputTime = timeForInput;
+            }
         }
-        misinputText.text = $"Misinput: {misinput}";
+        misinputText.text = $"Misinput: {misinput} / 3";
         if (enemyKeys.Count < 1)
         {
-            //battle won
+            //battle won.
             ResolveBattle(keySprite, misinputText);
             return (false, timeReward);
         }
         else
         {
+            //battle continues.
             return (true, 0);
         }
     }
@@ -57,6 +85,9 @@ public class Sequence : MonoBehaviour
         misinput = 0;
         keySprite.gameObject.SetActive(false);
         misinputText.gameObject.SetActive(false);
+        inputTimeVisual.gameObject.SetActive(false);
+        gameObject.GetComponent<MeshRenderer>().material.color = Color.black;
+        Destroy(this);
         battle = false;
     }
 

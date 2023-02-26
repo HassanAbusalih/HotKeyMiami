@@ -1,19 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class Timer : MonoBehaviour
 {
     public float levelTimer;
-    float battleTime;
-    bool endOfBattle;
+    float reset;
     [SerializeField] TextMeshProUGUI timerUI;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        reset = levelTimer;
     }
 
     // Update is called once per frame
@@ -26,9 +26,17 @@ public class Timer : MonoBehaviour
         }
         if (levelTimer < 0)
         {
-            //level failed, reset
+            //level failed, reset. Should probably bring up UI element instead.
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Lava"))
+        {
+            //levelTimer = reset;
+        }
+    }
 
 }
