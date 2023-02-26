@@ -12,12 +12,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Image keySprite; //Sprite to show the player which key to press.
     PlayerControls playerControls;
     Sequence enemy;
+    Timer timeRemaining;
     Rigidbody rb;
     bool battle;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         playerControls = GetComponent<PlayerControls>();
+        timeRemaining = GetComponent<Timer>();
     }
 
     void Update()
@@ -25,8 +27,10 @@ public class PlayerController : MonoBehaviour
         // if in battle, take inputs. Otherwise, move/run instead.
         if (battle)
         {
-            battle = enemy.TakeInput(enemyKeys, keySprite, misinputText);
-            rb.velocity = Vector3.zero;
+            (bool battle, int time) battleResult = enemy.TakeInput(enemyKeys, keySprite, misinputText);
+            battle = battleResult.battle;
+            timeRemaining.levelTimer += battleResult.time;
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
         else
         {
