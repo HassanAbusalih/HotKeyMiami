@@ -10,10 +10,10 @@ public class Sequence : MonoBehaviour
     [SerializeField] int timeReward; //Amount of time to reward player on win.
     [SerializeField] int timePenalty; //Amount of time to penalize the player on loss. Should be a negative value or zero.
     [SerializeField] Image inputTimeVisual;
-    [SerializeField] float timeForInput;
+    [SerializeField] float timeForInput = 1;
     [SerializeField] TextMeshProUGUI rating;
     float currentInputTime;
-    public bool battle = false;
+    [HideInInspector] public bool battle = false;
     int misinput = 0;
 
     public (bool,int) TakeInput(List<KeyPlusSprite> enemyKeys, Image keySprite, TextMeshProUGUI misinputText) //Scrolls through the list of keys set for the enemy as the player makes the inputs.

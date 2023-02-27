@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Image keySprite; //Sprite to show the player which key to press.
     [SerializeField] GameObject failPanel;
     [SerializeField] GameObject levelCompletePanel;
-    public bool lava;
+    [HideInInspector] public bool lava;
     Vector3 startPos = new();
     PlayerControls playerControls;
     Sequence enemy;
