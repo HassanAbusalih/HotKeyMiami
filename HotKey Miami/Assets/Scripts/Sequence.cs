@@ -11,8 +11,8 @@ public class Sequence : MonoBehaviour
     [SerializeField] int timePenalty; //Amount of time to penalize the player on loss. Should be a negative value or zero.
     [SerializeField] Image inputTimeVisual;
     [SerializeField] float timeForInput;
+    [SerializeField] TextMeshProUGUI rating;
     float currentInputTime;
-    bool wait;
     public bool battle = false;
     int misinput = 0;
 
@@ -52,6 +52,23 @@ public class Sequence : MonoBehaviour
             if (Input.GetKeyDown(enemyKeys[enemyKeys.Count - 1].key) && misinput < 3)
             {
                 enemyKeys.RemoveAt(enemyKeys.Count - 1);
+                rating.gameObject.SetActive(true);
+                if (inputTimeVisual.fillAmount > 0.7f)
+                {
+                    rating.text = "Perfect!";
+                    rating.color = Color.green;
+                }
+                else if (inputTimeVisual.fillAmount > 0.4f)
+                {
+                    rating.text = "Good!";
+                    rating.color = Color.yellow;
+                }
+                else
+                {
+                    rating.text = "Poor...";
+                    rating.color = Color.red;
+                }
+                Invoke(nameof(TurnOffRating), 0.5f);
                 currentInputTime = timeForInput;
             }
             else if (Input.anyKeyDown)
@@ -79,6 +96,16 @@ public class Sequence : MonoBehaviour
         }
     }
 
+    void TurnOffRating()
+    {
+        rating.gameObject.SetActive(false);
+        rating.text = null;
+        if (!battle)
+        {
+            Destroy(this);
+        }
+    }
+
     void ResolveBattle(Image keySprite, TextMeshProUGUI misinputText)
     {
         keySprite.sprite = null;
@@ -87,8 +114,8 @@ public class Sequence : MonoBehaviour
         misinputText.gameObject.SetActive(false);
         inputTimeVisual.gameObject.SetActive(false);
         gameObject.GetComponent<MeshRenderer>().material.color = Color.black;
-        Destroy(this);
         battle = false;
+        Invoke(nameof(TurnOffRating), 0.5f);
     }
 
     public List<KeyPlusSprite> SetKeys(KeyPlusSprite[] keyList) //Assigns the keys the player will have to press to beat this enemy.

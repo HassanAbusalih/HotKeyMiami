@@ -7,8 +7,10 @@ using TMPro;
 public class Timer : MonoBehaviour
 {
     public float levelTimer;
+    public bool stopTime;
     float reset;
     [SerializeField] TextMeshProUGUI timerUI;
+    [SerializeField] GameObject failPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -19,15 +21,13 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        levelTimer -= Time.deltaTime;
+        if (!stopTime)
+        {
+            levelTimer -= Time.deltaTime;
+        }
         if (timerUI != null)
         {
             timerUI.text = $"Time: {(int)levelTimer}";
-        }
-        if (levelTimer < 0)
-        {
-            //level failed, reset. Should probably bring up UI element instead.
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
@@ -35,7 +35,7 @@ public class Timer : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Lava"))
         {
-            //levelTimer = reset;
+            //levelTimer = reset; //commented out for now since enemies will not reset.
         }
     }
 

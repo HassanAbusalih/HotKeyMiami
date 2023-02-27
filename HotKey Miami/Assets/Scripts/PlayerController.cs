@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] List<KeyPlusSprite> enemyKeys = new(); //List of keys/inputs for battle.
     [SerializeField] TextMeshProUGUI misinputText;
     [SerializeField] Image keySprite; //Sprite to show the player which key to press.
+    [SerializeField] GameObject failPanel;
+    [SerializeField] GameObject levelCompletePanel;
     public bool lava;
     Vector3 startPos = new();
     PlayerControls playerControls;
@@ -28,17 +30,29 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // If in battle, take inputs. Otherwise, move/run instead.
-        if (battle)
+        if (!failPanel.activeSelf || !levelCompletePanel.activeSelf) // Disables player control if either panel is activated.
         {
-            (bool battle, int time) battleResult = enemy.TakeInput(enemyKeys, keySprite, misinputText);
-            battle = battleResult.battle;
-            timeRemaining.levelTimer += battleResult.time;
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            // If in battle, take inputs. Otherwise, move/run instead.
+            if (battle)
+            {
+                (bool battle, int time) battleResult = enemy.TakeInput(enemyKeys, keySprite, misinputText);
+                battle = battleResult.battle;
+                timeRemaining.levelTimer += battleResult.time;
+                rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            }
+            else
+            {
+                playerControls.PlayerActions(rb);
+            }
+        }
+        else if (timeRemaining.levelTimer < 0)
+        {
+            timeRemaining.stopTime = true;
+            failPanel.SetActive(true);
         }
         else
         {
-            playerControls.PlayerActions(rb);
+            timeRemaining.stopTime = true;
         }
 
     }
