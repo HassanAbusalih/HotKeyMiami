@@ -17,7 +17,11 @@ public class AIMovement : MonoBehaviour
         {
             battle = GetComponent<Sequence>().battle;
         }
-        if (!battle)
+        if (battle)
+        {
+            Destroy(this);
+        }
+        else if (!battle && positions != null)
         {
             LoopThroughPos();
         }

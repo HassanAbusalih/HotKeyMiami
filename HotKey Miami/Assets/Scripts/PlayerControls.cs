@@ -18,7 +18,7 @@ public class PlayerControls : MonoBehaviour
 
     public void PlayerActions(Rigidbody rb)
     {
-        if (Physics.Raycast(transform.position, -transform.up, 40f))
+        if (Physics.Raycast(transform.position, -transform.up, 1.6f))
         {
             canJump = true;
         }
