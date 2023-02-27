@@ -16,6 +16,11 @@ public class FirstPersonCam : MonoBehaviour
         player.transform.forward = transform.forward;
         mouseX += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         mouseY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (player.GetComponent<PlayerController>().lava)
+        {
+            mouseY = mouseX = 0;
+            player.GetComponent<PlayerController>().lava = false;
+        }
         if (mouseX < 0)
         {
             mouseX += 360;
