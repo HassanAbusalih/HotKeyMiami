@@ -7,7 +7,7 @@ using TMPro;
 public class Timer : MonoBehaviour
 {
     public float levelTimer;
-    [HideInInspector] public bool stopTime;
+    public bool stopTime;
     float reset;
     [SerializeField] TextMeshProUGUI timerUI;
     [SerializeField] GameObject failPanel;
