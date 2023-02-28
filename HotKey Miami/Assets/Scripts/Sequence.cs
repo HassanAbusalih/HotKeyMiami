@@ -100,10 +100,6 @@ public class Sequence : MonoBehaviour
     {
         rating.gameObject.SetActive(false);
         rating.text = null;
-        if (!battle)
-        {
-            Destroy(this);
-        }
     }
 
     void ResolveBattle(Image keySprite, TextMeshProUGUI misinputText)
@@ -114,8 +110,9 @@ public class Sequence : MonoBehaviour
         misinputText.gameObject.SetActive(false);
         inputTimeVisual.gameObject.SetActive(false);
         gameObject.GetComponent<MeshRenderer>().material.color = Color.black;
+        rating.gameObject.SetActive(false);
         battle = false;
-        Invoke(nameof(TurnOffRating), 0.5f);
+        Destroy(this);
     }
 
     public List<KeyPlusSprite> SetKeys(KeyPlusSprite[] keyList) //Assigns the keys the player will have to press to beat this enemy.

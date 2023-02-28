@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!failPanel.activeSelf || !levelCompletePanel.activeSelf) // Disables player control if either panel is activated.
+        if (!failPanel.activeSelf && !levelCompletePanel.activeSelf) // Disables player control if either panel is activated.
         {
             // If in battle, take inputs. Otherwise, move/run instead.
             if (battle)
@@ -48,11 +48,13 @@ public class PlayerController : MonoBehaviour
         else if (timeRemaining.levelTimer < 0)
         {
             timeRemaining.stopTime = true;
+            rb.velocity = Vector3.zero;
             failPanel.SetActive(true);
         }
         else
         {
             timeRemaining.stopTime = true;
+            rb.velocity = Vector3.zero;
         }
 
     }
