@@ -14,12 +14,13 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float sprintSpeed;
     [SerializeField] float jumpHeight;
-
+    
 
     public void PlayerActions(Rigidbody rb)
     {
         if (Physics.Raycast(transform.position, -transform.up, 1.6f))
         {
+           
             canJump = true;
         }
         Vector3 movement = new Vector3();
@@ -51,6 +52,7 @@ public class PlayerControls : MonoBehaviour
         rb.velocity = new Vector3(0, rb.velocity.y, 0);
         if (Input.GetKeyDown(jump) && canJump)
         {
+            GetComponent<AudioSource>().Play();
             rb.velocity +=  Vector3.up * jumpHeight;
             canJump = false;
         }

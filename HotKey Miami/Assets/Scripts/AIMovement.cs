@@ -8,7 +8,7 @@ public class AIMovement : MonoBehaviour
     [SerializeField] float moveSpeed = 1f;
     bool battle;
     bool forward = true;
-    [SerializeField] int currentPos = -1;
+    [SerializeField] int currentPos = 1;
 
     // Update is called once per frame
     void Update()

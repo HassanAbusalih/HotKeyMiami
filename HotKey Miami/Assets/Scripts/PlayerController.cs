@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
     Timer timeRemaining;
     Rigidbody rb;
     bool battle;
+    
+    public AudioSource winAudio;
+    public AudioSource loseAudio;
     void Start()
     {
         startPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
@@ -47,12 +50,14 @@ public class PlayerController : MonoBehaviour
         }
         else if (timeRemaining.levelTimer < 0)
         {
+            GetComponent<AudioSource>().Play();
             timeRemaining.stopTime = true;
             rb.velocity = Vector3.zero;
             failPanel.SetActive(true);
         }
         else
         {
+            GetComponent<AudioSource>().Play();
             timeRemaining.stopTime = true;
             rb.velocity = Vector3.zero;
         }
