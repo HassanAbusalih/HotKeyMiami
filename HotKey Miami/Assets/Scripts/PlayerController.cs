@@ -48,14 +48,14 @@ public class PlayerController : MonoBehaviour
                 playerControls.PlayerActions(rb);
             }
         }
-        else if (timeRemaining.levelTimer < 0)
+        if (timeRemaining.levelTimer < 0)
         {
             GetComponent<AudioSource>().Play();
             timeRemaining.stopTime = true;
             rb.velocity = Vector3.zero;
             failPanel.SetActive(true);
         }
-        else
+        if (levelCompletePanel.activeSelf)
         {
             GetComponent<AudioSource>().Play();
             timeRemaining.stopTime = true;
