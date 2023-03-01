@@ -52,7 +52,10 @@ public class PlayerControls : MonoBehaviour
         rb.velocity = new Vector3(0, rb.velocity.y, 0);
         if (Input.GetKeyDown(jump) && canJump)
         {
-            GetComponent<AudioSource>().Play();
+            if (GetComponent<AudioSource>() != null)
+            {
+                GetComponent<AudioSource>().Play();
+            }
             rb.velocity +=  Vector3.up * jumpHeight;
             canJump = false;
         }
