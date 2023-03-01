@@ -45,13 +45,13 @@ public class PlayerController : MonoBehaviour
                 playerControls.PlayerActions(rb);
             }
         }
-        else if (timeRemaining.levelTimer < 0)
+        if (timeRemaining.levelTimer < 0)
         {
             timeRemaining.stopTime = true;
             rb.velocity = Vector3.zero;
             failPanel.SetActive(true);
         }
-        else
+        if (levelCompletePanel.activeSelf)
         {
             timeRemaining.stopTime = true;
             rb.velocity = Vector3.zero;
